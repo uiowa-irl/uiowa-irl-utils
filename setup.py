@@ -1,10 +1,10 @@
 import setuptools
 
-with open("ui-irl-utils/README.md", "r") as fh:
+with open("irlutils/README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="ui-irl-utils",
+    name="irlutils",
     version="0.0.1",
     author="The University of Iowa Internet Research Lab",
     author_email="john-cook@uiowa.edu",
