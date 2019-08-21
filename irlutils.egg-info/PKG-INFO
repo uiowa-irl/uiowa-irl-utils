@@ -1,0 +1,14 @@
+Metadata-Version: 2.1
+Name: irlutils
+Version: 0.0.1
+Summary: A set of useful utilities for researchers
+Home-page: https://github.com/uiowa-irl/uiowa-irl-utils
+Author: The University of Iowa Internet Research Lab
+Author-email: john-cook@uiowa.edu
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
