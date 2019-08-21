@@ -8,8 +8,8 @@ git clone https://github.com/uiowa-irl/uiowa-irl-utils.git
 cd uiowa-irl-utils/
 pip install --user .
 ```
-import the uiowa-irl-utils library: 
-````
+To access the module in python type: 
+```
 import irlutils
 ``` 
    
