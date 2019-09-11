@@ -48,6 +48,14 @@ def tar_unpacker(**kwargs):
         tf = tarfile.open(path)
         tf.extractall(path=tmp_path)
 
+def tar_unpacker_and_search(tar_path, pattern="", extract_parent_dir='', extract_tmp_dir=''):
+    path = tar_path
+    tf = tarfile.open(path)
+    tf.extractall(path=extract_tmp_dir)        
+    tmp_dir = os.path.join(extract_tmp_dir, extract_tmp_dir)
+    tmp_path = gen_find_files(pattern, tmp_dir)
+    return tmp_path           
+
 def json_flatten( **kwargs):
     data = kwargs.get('data')
     kv = kwargs.get('kv', {})
