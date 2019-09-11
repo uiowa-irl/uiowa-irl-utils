@@ -37,24 +37,20 @@ def rmsubtree(location):
 
 
 def tar_unpacker(**kwargs):
+    
     tar_path = kwargs.get('tar_path','')
-    num_files = len(os.listdir(tar_path))
-    count=1
-    for file in os.listdir(tar_path):
-        tmp_path = tempfile.mkdtemp()
+    extract_tmp_dir = kwargs.get("extract_tmp_dir", "")
+    pattern = kwargs.get("pattern", "")
 
-        count+=1
-        path = os.path.join(tar_path, file)
-        tf = tarfile.open(path)
-        tf.extractall(path=tmp_path)
-
-def tar_unpacker_and_search(tar_path, pattern="", extract_parent_dir='', extract_tmp_dir=''):
-    path = tar_path
+    tmp_path = tempfile.mkdtemp()
+    path = os.path.join(tar_path, extract_tmp_dir)
     tf = tarfile.open(path)
-    tf.extractall(path=extract_tmp_dir)        
-    tmp_dir = os.path.join(extract_tmp_dir, extract_tmp_dir)
-    tmp_path = gen_find_files(pattern, tmp_dir)
-    return tmp_path           
+    tf.extractall(path=tmp_path)
+    if pattern != "":
+        tmp_dir = os.path.join(tmp_path, extract_tmp_dir)
+        tmp_file = gen_find_files(pattern, tmp_dir)
+        return tmp_file
+    return tmp_path
 
 def json_flatten( **kwargs):
     data = kwargs.get('data')
