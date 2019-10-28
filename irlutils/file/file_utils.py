@@ -24,12 +24,12 @@ def gen_find_files(**kwargs):
         root (str): top level folder to begin search from. 
 
     Yields:
-        path: matching path str
+        path (generator): matching path str
 
     Examples:
         gen_find_files(file_pattern="*.sql", root="/mnt/data/).
 
-        >>> gen_find_files(file_pattern="*.sql", root="/mnt/data/)
+        >>> gen_find_files(file_pattern="*.sql", root="/mnt/data/).__next__()
         /mnt/data/first_folder/last_folder/file.sqlite
         
     Reference: 
@@ -43,7 +43,14 @@ def gen_find_files(**kwargs):
             yield os.path.join(path, name)
 
 def rmsubtree(**kwargs):
-    """Clears all subfolders and files in location"""
+    """Clears all subfolders and files in location
+    kwargs:
+        location (str): target directory to remove
+    Examples:
+
+        >>> rmsubtree(location="/path/to/target_dir").
+
+    """
     location = kwargs.get("location", "")
     for root, dirs, files in os.walk(location):
         for f in files:
@@ -62,9 +69,9 @@ def tar_unpacker(**kwargs):
         tar_path (str): tar file path
         versbose (bool): True enables verbose
 
-    Yields:
+    returns:
 
-        tmp_path: extracted contents path
+        tmp_path (generator): extracted contents path
 
     Examples:
 
@@ -88,33 +95,40 @@ def tar_unpacker(**kwargs):
     return tmp_path
 
 
-def json_flatten(**kwargs):
-    data = kwargs.get('data',"")
-    kv = kwargs.get('kv', {})
-    try: 
-        for key,value in data.items():
-            # print("{}->{}".format(key, value))
-            if type(value) == type(dict()):
-                json_flatten(data=value, kv=kv)
-            elif type(value) == type(list()):
-                for val in value:
-                    if type(val) == type(str()):
-                        
-                        kv[key] = val
-                        # print("kv str: {}".format(kv))
-                        pass
-                    elif type(val) == type(list()):
-                        kv[key] = val
-                        # print("kv list: {}".format(kv))
-                        pass
-                    else:
-                        json_flatten(data=val, kv=kv)
-            else: 
-                kv[key] = value
-                # print("kv: {}".format(kv))
+def json_flatten(y):
+    """ flattens nested structures within a json file
 
-        return kv
-    except Exception: 
-        return kv
-        
+
+    Kwargs:
+
+        data (dict): data from nested dictionary
+        kv (dict): dictionary containing key,value pairs. 
+
+    returns:
+
+        kv (dict): a dictionary object containing flattened structures
+
+    Examples:
+        data = {'k1':{'kv1':['v1', 'v2'], 'kv2': 'v3'}}
+
+        >>> json_flatten(data)
+            {'k1_kv1_0': 'v1', 'k1_kv1_1': 'v2', 'k1_kv2': 'v3'}
+
+    """
+    out = {}
+
+    def flatten(x, name=''):
+        if type(x) is dict:
+            for a in x:
+                flatten(x[a], name + a + '_')
+        elif type(x) is list:
+            i = 0
+            for a in x:
+                flatten(a, name + str(i) + '_')
+                i += 1
+        else:
+            out[name[:-1]] = x
+
+    flatten(y)
+    return out
 
