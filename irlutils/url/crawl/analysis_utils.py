@@ -128,6 +128,16 @@ def datetime_from_iso(iso_date):
 
 
 def get_cookie(headers):
+    """ A special case of parse headers that extracts only the cookie. 
+
+    Args: 
+        headers (list): http request headers
+
+    Returns:
+
+        item(string): name value pairs of a cookie
+
+    """
     # not tested
     for item in headers:
         if item[0] == "Cookie":
@@ -135,6 +145,14 @@ def get_cookie(headers):
     return ""
 
 def parse_headers(header): 
+    """parses http header into kv pairs
+
+    Args: 
+        headers (string): http request headers
+
+    Returns:
+         kv(dict): name value pairs of http headers
+    """
     kv = {}
     for item in json.loads(header):
         k = item[0]
@@ -143,6 +161,14 @@ def parse_headers(header):
     return kv
 
 def get_set_cookie(header):
+    """A special case of parse headers that returns 'Set-Cookies'
+
+    Args: 
+        headers (string): http request headers
+
+    Returns:
+         item(string): name value pairs of Set Cookie field
+    """
     # not tested
     for item in json.loads(header):
         if item[0] == "Set-Cookie":
@@ -151,6 +177,16 @@ def get_set_cookie(header):
 
 
 def get_responses_from_visits(con, visit_ids):
+    """Extact http requests matching visit_ids
+
+    Args: 
+        con (sqlite3.connection): A connection to a sqlite data base
+        visit_ids (list): A list of ids for from each web visit
+
+    Returns:
+         df(pandas DataFrame): A table containing visits that conincide with http responses
+    """
+
     visit_ids_str = "(%s)" % ",".join(str(x) for x in visit_ids)
     qry = """SELECT r.id, r.crawl_id, r.visit_id, r.url,
                 sv.site_url, sv.first_party, sv.site_rank,
@@ -164,6 +200,15 @@ def get_responses_from_visits(con, visit_ids):
 
 
 def get_requests_from_visits(con, visit_ids):
+    """Extact http requests matching visit_ids
+
+    Args: 
+        con (sqlite3.connection): A connection to a sqlite data base
+        visit_ids (list): A list of ids for from each web visit
+
+    Returns:
+         df(pandas DataFrame): A table containing visits that conincide with http requests
+    """
     visit_ids_str = "(%s)" % ",".join(str(x) for x in visit_ids)
     qry = """SELECT r.id, r.crawl_id, r.visit_id, r.url, r.top_level_url,
             sv.site_url, sv.first_party, sv.site_rank,
@@ -178,6 +223,15 @@ def get_requests_from_visits(con, visit_ids):
 
 
 def get_set_of_script_ps1s_from_call_stack(script_urls, du):
+    """extract a unique set of urls from a list of urls detected in scripts
+
+    Args: 
+        script_urls (list): A list of urls extracted from javascripts
+        du (list): A domain utilities instance
+
+    Returns:
+         psls(set): a set of tld+1(string)
+    """    
     if len(script_urls):
         return ", ".join(
             set((du.get_ps_plus_1(x) or "") for x in script_urls.split(", ")))
@@ -186,6 +240,12 @@ def get_set_of_script_ps1s_from_call_stack(script_urls, du):
 
 
 def add_col_set_of_script_ps1s_from_call_stack(js_df):
+    """map psls to call stack in scripts
+
+    Args: 
+        js_df (pandas dataFrame): javascript table 
+
+    """ 
     js_df['stack_script_ps1s'] =\
         js_df['stack_scripts'].map(get_set_of_script_ps1s_from_call_stack)
 
