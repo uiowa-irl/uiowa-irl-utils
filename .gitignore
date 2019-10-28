@@ -1,6 +1,7 @@
 # Docker volume
 docker-volume/
-
+#vscode
+.vscode
 # pytest
 .pytest_cache/
 
