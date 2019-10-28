@@ -1,27 +1,32 @@
 
 # IRL Utilities
-
 # Installation
-
 ## git
+
 ```
 git clone https://github.com/uiowa-irl/uiowa-irl-utils.git
 cd uiowa-irl-utils
 pip install --user .
 ```
+
 ## pypi
+
 ```
 pip install irlutils
 ``` 
  
 import the  module: 
+
 ```
 import irlutils
-```Help on module file_utils:
+```
 
-NAME
-    file_utils
 
+# Documentation
+
+
+## file_utils
+```
 FUNCTIONS
     gen_find_files(**kwargs)
         returns filenames that matches the given pattern under() a given dir
@@ -95,13 +100,9 @@ AUTHOR
 
 FILE
     irlutils/file/file_utils.py
-
-
-Help on module database_utils:
-
-NAME
-    database_utils
-
+```
+## database_utils
+```
 FUNCTIONS
     build_index(cursor, column, tables)
         Build an index on `column` for each table in `tables`
@@ -188,13 +189,11 @@ FUNCTIONS
 
 FILE
     irlutils/url/crawl/database_utils.py
+```
 
+## domain_utils
 
-Help on module domain_utils:
-
-NAME
-    domain_utils
-
+```
 FUNCTIONS
     get_hostname(url)
         strips out the hostname from a url
@@ -242,13 +241,11 @@ DATA
 
 FILE
     irlutils/url/crawl/domain_utils.py
+```
 
+## blocklist_utils
 
-Help on module blocklist_utils:
-
-NAME
-    blocklist_utils
-
+```
 FUNCTIONS
     get_option_dict(request)
         Build an options dict for BlockListParser
@@ -292,13 +289,11 @@ FUNCTIONS
 
 FILE
     irlutils/url/crawl/blocklist_utils.py
+```
 
+## analysis_utils
 
-Help on module analysis_utils:
-
-NAME
-    analysis_utils
-
+```
 FUNCTIONS
     add_col_bare_script_url(js_df)
         Add a col for script URL without scheme, www and query.
@@ -408,13 +403,11 @@ DATA
 
 FILE
     irlutils/url/crawl/analysis_utils.py
+```
 
+## chi2_proportions
 
-Help on module chi2_proportions:
-
-NAME
-    chi2_proportions
-
+```
 FUNCTIONS
     chi2Proportions(count, nobs)
         A wrapper for the chi2 testing proportions based upon the chi-square test
@@ -459,5 +452,4 @@ FUNCTIONS
 
 FILE
     irlutils/stats/tests/proportions/chi2_proportions.py
-
-
+```
