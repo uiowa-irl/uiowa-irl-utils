@@ -1,6 +1,6 @@
 from urllib import parse as  urlparse
 
-import url.crawl_utils.openWPM.domain_utils as du
+import irlutils.url.crawl.domain_utils as du
 
 
 def get_option_dict(request):
