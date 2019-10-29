@@ -1,3 +1,4 @@
+
 import os
 import json
 import shutil
@@ -5,7 +6,8 @@ import tarfile
 import fnmatch
 import argparse
 import tempfile
-
+from pathlib import PurePath
+import lcdk.lcdk as LeslieChow
 """
 References: 
 [1] Englehardt, Steven, and Arvind Narayanan. 
@@ -13,8 +15,8 @@ References:
     In Proceedings of the 2016 ACM SIGSAC Conference on Computer and 
     Communications Security, pp. 1388-1401. ACM, 2016.
 """
-__author__="senorchow"
-
+__author__="johncook"
+DBG = LeslieChow.lcdk()
 def gen_find_files(**kwargs):
     """returns filenames that matches the given pattern under() a given dir
 
@@ -58,9 +60,36 @@ def rmsubtree(**kwargs):
         for d in dirs:
             shutil.rmtree(os.path.join(root, d))
 
+def mv(s,d):
+    try: 
+        shutil.move(s,d) 
+    except Exception as e:
+        DBG.error(e)
+        return -1 
+    return 0
+
+def cp(s,d):
+    try: 
+        shutil.copy(s,d) 
+    except Exception as e:
+        DBG.error(e)
+        return -1 
+    return 0
 
 
-def tar_unpacker(**kwargs):
+def file_ext(path, **kwargs):
+    """Clears all subfolders and files in location
+    kwargs:
+        path (str): path or file name
+    Examples:
+
+        >>> file_ext('/path/to_file/with_ext/test.py')
+            .py
+    """
+    f = PurePath(path).suffix
+    print(f)
+
+def tar_unpacker(tar_path, **kwargs):
     """ unpacks tar to a tmp directory. 
 
 
@@ -75,25 +104,65 @@ def tar_unpacker(**kwargs):
 
     Examples:
 
-        tar_unpacker(file_pattern="/mnt/data/tarfile.tar.gz").
+        tar_unpacker(tar_path="/mnt/data/tarfile.tar.gz").
 
-        >>> tar_unpacker(file_pattern="/mnt/data/tarfile.tar.gz").
+        >>> tar_unpacker(tar_path="/mnt/data/tarfile.tar.gz").
         /tmp/FZ4245_Zb/
     """
-    tar_path = kwargs.get('tar_path','')
     verbose = kwargs.get("verbose", False)
-    count=1
-    
-    tmp_path = tempfile.mkdtemp()
+    tmp_path = tempfile.mktemp()
+    extract_dir = kwargs.get("extract_dir", tmp_path)
 
-    count+=1
-    command ="tar -xf {}".format(tar_path)
-
+    cmd = "tar -xf {}".format(tar_path)
+    if extract_dir != tmp_path: 
+        cmd  = "tar -xf {} -C ".format(tar_path, extract_dir)
     if verbose: 
-        command ="tar -xvf {}".format(tar_path)
-    os.system(command)
+        cmd = "tar -xf {}".format(tar_path)
+        if extract_dir != tmp_path: 
+            cmd  = "tar -xvf {} -C ".format(tar_path, extract_dir)
+    os.system(cmd)
     return tmp_path
 
+def tar_packer(tar_dir, **kwargs):
+    """ tars up  directory 
+
+
+    Kwargs:
+
+        dir (str): top level dir
+        compression (bool): compression type. gz, xz supported now
+        versbose (bool): True enables verbose
+
+    returns:
+
+        tar_path (generator): path to tar file
+
+    Examples:
+
+        tar_packer(dir="/path/to/top_level_dir", [compression=gz|xz]
+
+        >>> 
+            /tmp/FZ4245_Zb/top_level_dir.tar
+    """
+    compression = kwargs.get('compression','')
+    verbose = kwargs.get("verbose", False)
+    tmp_path = tempfile.mkdtemp()
+    file = tar_dir+'.tar'
+    path = os.path.append(tmp_path, file)
+    cmd ="tar -cf {}".format(path)
+    if verbose: 
+        cmd ="tar -cvf {}".format(path)
+    if compression == 'xz': 
+        cmd ="tar -cJf {}".format(path)
+        if verbose: 
+            cmd ="tar -cJvf {}".format(path)
+    if compression == 'gz': 
+        cmd ="tar -czf {}".format(path)
+        if verbose: 
+            cmd ="tar -czvf {}".format(path)
+
+    os.system(cmd)
+    return tmp_path
 
 def json_flatten(y):
     """ flattens nested structures within a json file
