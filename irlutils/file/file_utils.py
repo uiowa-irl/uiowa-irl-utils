@@ -2,7 +2,6 @@
 import os
 import json
 import shutil
-import tarfile
 import fnmatch
 import argparse
 import tempfile
