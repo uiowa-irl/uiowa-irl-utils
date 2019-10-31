@@ -15,7 +15,6 @@ References:
     Communications Security, pp. 1388-1401. ACM, 2016.
 """
 __author__="johncook"
-DBG = LeslieChow.lcdk()
 def gen_find_files(**kwargs):
     """returns filenames that matches the given pattern under() a given dir
 
@@ -63,7 +62,6 @@ def mv(s,d):
     try: 
         shutil.move(s,d) 
     except Exception as e:
-        DBG.error(e)
         return -1 
     return 0
 
@@ -71,7 +69,6 @@ def cp(s,d):
     try: 
         shutil.copy(s,d) 
     except Exception as e:
-        DBG.error(e)
         return -1 
     return 0
 
