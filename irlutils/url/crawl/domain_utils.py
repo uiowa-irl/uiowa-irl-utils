@@ -10,7 +10,7 @@ from functools import wraps
 from ipaddress import ip_address
 
 from six.moves.urllib.parse import urlparse
-
+import publicsuffix2 as publicsuffix
 from publicsuffix import PublicSuffixList, fetch
 
 
