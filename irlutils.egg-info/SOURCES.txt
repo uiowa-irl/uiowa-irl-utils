@@ -1,5 +1,7 @@
 README.md
 setup.py
+file/__init__.py
+file/file_utils.py
 irlutils/__init__.py
 irlutils.egg-info/PKG-INFO
 irlutils.egg-info/SOURCES.txt
@@ -17,3 +19,15 @@ irlutils/url/crawl/analysis_utils.py
 irlutils/url/crawl/blocklist_utils.py
 irlutils/url/crawl/database_utils.py
 irlutils/url/crawl/domain_utils.py
+plot/__init__.py
+plot/plotting.py
+stats/__init__.py
+stats/tests/__init__.py
+stats/tests/proportions/__init__.py
+stats/tests/proportions/chi2_proportions.py
+url/__init__.py
+url/crawl/__init__.py
+url/crawl/analysis_utils.py
+url/crawl/blocklist_utils.py
+url/crawl/database_utils.py
+url/crawl/domain_utils.py
