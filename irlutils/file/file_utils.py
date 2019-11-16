@@ -87,8 +87,10 @@ def mkdir(d, mode=0o777, exist_ok=True):
         return -1 
     return 0
 
-def touch(self,d):
-    status = open(d,'w')
+def touch(d):
+    status=""
+    if not os.path.exists(d):
+        status = open(d,'w')
     return status
 
 def chmod(path, mode=777, recursive=False):
@@ -202,7 +204,7 @@ def tar_packer(tar_dir, **kwargs):
     os.system(cmd)
     return tmp_path
 
-def rm(self,d):
+def rm(d):
     try:
         rmsubtree(path=d)
     except Exception as e:
