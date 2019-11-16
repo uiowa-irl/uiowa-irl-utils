@@ -15,6 +15,10 @@ References:
     Communications Security, pp. 1388-1401. ACM, 2016.
 """
 __author__="johncook"
+DBG = LeslieChow.lcdk(logsPath='file_utils_debug.log')
+
+
+
 def gen_find_files(**kwargs):
     """returns filenames that matches the given pattern under() a given dir
 
@@ -51,8 +55,8 @@ def rmsubtree(**kwargs):
         >>> rmsubtree(location="/path/to/target_dir").
 
     """
-    location = kwargs.get("location", "")
-    for root, dirs, files in os.walk(location):
+    path = kwargs.get("path", "")
+    for root, dirs, files in os.walk(path):
         for f in files:
             os.unlink(os.path.join(root, f))
         for d in dirs:
@@ -62,6 +66,7 @@ def mv(s,d):
     try: 
         shutil.move(s,d) 
     except Exception as e:
+        DBG.error(e)
         return -1 
     return 0
 
@@ -69,21 +74,58 @@ def cp(s,d):
     try: 
         shutil.copy(s,d) 
     except Exception as e:
+        DBG.error(e)
+        return -1 
+    return 0
+        
+
+def mkdir(d, mode=0o777, exist_ok=True):
+    try: 
+        os.makedirs(d, mode=mode, exist_ok=exist_ok)
+    except Exception as e:
+        DBG.error(e)
         return -1 
     return 0
 
+def touch(self,d):
+    status = open(d,'w')
+    return status
+
+def chmod(path, mode=777, recursive=False):
+    try:
+        if recursive: 
+            os.system('sudo chmod {} -R {}'.format(mode, path))
+        else:
+            os.system('sudo chmod {} {}'.format(mode, path))
+    except Exception as e:
+        DBG.error(e)
+        return -1 
+    return 0
+
+def chownUser(path, recursive=False, owner='user', group='user'):
+    try:
+        if recursive:
+            os.system('sudo chown  {} -R {}')
+        else:
+            os.system('sudo chown  {} {}')
+    except Exception as e:
+        DBG.error(e)
+        return -1 
+    return 0
 
 def file_ext(path, **kwargs):
-    """Clears all subfolders and files in location
+    """file extension finder
     kwargs:
         path (str): path or file name
+    Returns:
+        dotted file extension of a file
     Examples:
 
         >>> file_ext('/path/to_file/with_ext/test.py')
             .py
     """
     f = PurePath(path).suffix
-    print(f)
+    return f
 
 def tar_unpacker(tar_path, **kwargs):
     """ unpacks tar to a tmp directory. 
@@ -111,11 +153,11 @@ def tar_unpacker(tar_path, **kwargs):
 
     cmd = "tar -xf {}".format(tar_path)
     if extract_dir != tmp_path: 
-        cmd  = "tar -xf {} -C ".format(tar_path, extract_dir)
+        cmd  = "tar -xf {} -C {}".format(tar_path, extract_dir)
     if verbose: 
         cmd = "tar -xf {}".format(tar_path)
         if extract_dir != tmp_path: 
-            cmd  = "tar -xvf {} -C ".format(tar_path, extract_dir)
+            cmd  = "tar -xvf {} -C {}".format(tar_path, extract_dir)
     os.system(cmd)
     return tmp_path
 
@@ -144,7 +186,7 @@ def tar_packer(tar_dir, **kwargs):
     verbose = kwargs.get("verbose", False)
     tmp_path = tempfile.mkdtemp()
     file = tar_dir+'.tar'
-    path = os.path.append(tmp_path, file)
+    path = os.path.join(tmp_path, file)
     cmd ="tar -cf {}".format(path)
     if verbose: 
         cmd ="tar -cvf {}".format(path)
@@ -159,6 +201,22 @@ def tar_packer(tar_dir, **kwargs):
 
     os.system(cmd)
     return tmp_path
+
+def rm(self,d):
+    try:
+        rmsubtree(path=d)
+    except Exception as e:
+        DBG.error(e)
+        return -1 
+    return 0
+
+def compress_path( path):
+    try:
+        tmp = tar_packer(tar_dir=path)
+    except Exception as e:
+        DBG.error(e)
+        return '' 
+    return tmp
 
 def json_flatten(y):
     """ flattens nested structures within a json file
