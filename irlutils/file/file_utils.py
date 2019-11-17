@@ -15,7 +15,6 @@ References:
     Communications Security, pp. 1388-1401. ACM, 2016.
 """
 __author__="johncook"
-DBG = LeslieChow.lcdk(logsPath='file_utils_debug.log')
 
 
 
@@ -66,7 +65,7 @@ def mv(s,d):
     try:
         shutil.move(s,d)
     except Exception as e:
-        DBG.error(e)
+        print(e)
         return -1
     return 0
 
@@ -74,7 +73,7 @@ def cp(s,d):
     try:
         shutil.copy(s,d)
     except Exception as e:
-        DBG.error(e)
+        print(e)
         return -1
     return 0
 
@@ -83,7 +82,7 @@ def mkdir(d, mode=0o777, exist_ok=True):
     try:
         os.makedirs(d, mode=mode, exist_ok=exist_ok)
     except Exception as e:
-        DBG.error(e)
+        print(e)
         return -1
     return 0
 
@@ -100,18 +99,18 @@ def chmod(path, mode=777, recursive=False):
         else:
             os.system('sudo chmod {} {}'.format(mode, path))
     except Exception as e:
-        DBG.error(e)
+        print(e)
         return -1
     return 0
 
 def chown(path, recursive=False, owner='user', group='user'):
     try:
         if recursive:
-            os.system('sudo chown  {} -R {}')
+            os.system('sudo chown  {}:{} -R {}'.format(owner,group, path))
         else:
-            os.system('sudo chown  {} {}')
+            os.system('sudo chown  {}:{} {}'.format(owner, group, path))
     except Exception as e:
-        DBG.error(e)
+        print(e)
         return -1
     return 0
 
@@ -208,7 +207,7 @@ def rm(d):
     try:
         rmsubtree(path=d)
     except Exception as e:
-        DBG.error(e)
+        print(e)
         return -1
     return 0
 
@@ -216,7 +215,7 @@ def compress_path( path):
     try:
         tmp = tar_packer(tar_dir=path)
     except Exception as e:
-        DBG.error(e)
+        print(e)
         return ''
     return tmp
 
