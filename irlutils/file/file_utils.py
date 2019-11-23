@@ -157,7 +157,7 @@ def tar_unpacker(tar_path, **kwargs):
     if extract_dir != tmp_path: 
         cmd  = "tar -xf {} -C {}".format(tar_path, extract_dir)
     if verbose: 
-        cmd = "tar -xf {}".format(tar_path)
+        cmd = "tar -xvf {}".format(tar_path)
         if extract_dir != tmp_path: 
             cmd  = "tar -xvf {} -C {}".format(tar_path, extract_dir)
     os.system(cmd)
