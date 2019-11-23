@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="irlutils",
-    version="0.1.3",
+    version="0.1.4",
     author="The University of Iowa Internet Research Lab",
     author_email="john-cook@uiowa.edu",
     description="IRL Utilities",

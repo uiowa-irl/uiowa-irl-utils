@@ -149,7 +149,8 @@ def tar_unpacker(tar_path, **kwargs):
         /tmp/FZ4245_Zb/
     """
     verbose = kwargs.get("verbose", False)
-    tmp_path = tempfile.mktemp()
+    tempfile.mktemp()
+    tmp_path = tempfile.gettempdir()
     extract_dir = kwargs.get("extract_dir", tmp_path)
 
     cmd = "tar -xf {}".format(tar_path)
