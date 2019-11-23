@@ -8,14 +8,13 @@ import tempfile
 from pathlib import PurePath
 import lcdk.lcdk as LeslieChow
 """
-References: 
-[1] Englehardt, Steven, and Arvind Narayanan. 
-    "Online tracking: A 1-million-site measurement and analysis." 
-    In Proceedings of the 2016 ACM SIGSAC Conference on Computer and 
+References:
+[1] Englehardt, Steven, and Arvind Narayanan.
+    "Online tracking: A 1-million-site measurement and analysis."
+    In Proceedings of the 2016 ACM SIGSAC Conference on Computer and
     Communications Security, pp. 1388-1401. ACM, 2016.
 """
 __author__="johncook"
-DBG = LeslieChow.lcdk(logsPath='file_utils_debug.log')
 
 
 
@@ -24,8 +23,8 @@ def gen_find_files(**kwargs):
 
 
     Kwargs:
-        file_pattern (str): a regex style string . 
-        root (str): top level folder to begin search from. 
+        file_pattern (str): a regex style string .
+        root (str): top level folder to begin search from.
 
     Yields:
         path (generator): matching path str
@@ -35,8 +34,8 @@ def gen_find_files(**kwargs):
 
         >>> gen_find_files(file_pattern="*.sql", root="/mnt/data/).__next__()
         /mnt/data/first_folder/last_folder/file.sqlite
-        
-    Reference: 
+
+    Reference:
         [1] http://www.dabeaz.com/generators/
     """
 
@@ -63,28 +62,28 @@ def rmsubtree(**kwargs):
             shutil.rmtree(os.path.join(root, d))
 
 def mv(s,d):
-    try: 
-        shutil.move(s,d) 
+    try:
+        shutil.move(s,d)
     except Exception as e:
-        DBG.error(e)
-        return -1 
+        print(e)
+        return -1
     return 0
 
 def cp(s,d):
-    try: 
-        shutil.copy(s,d) 
+    try:
+        shutil.copy(s,d)
     except Exception as e:
-        DBG.error(e)
-        return -1 
+        print(e)
+        return -1
     return 0
-        
+
 
 def mkdir(d, mode=0o777, exist_ok=True):
-    try: 
+    try:
         os.makedirs(d, mode=mode, exist_ok=exist_ok)
     except Exception as e:
-        DBG.error(e)
-        return -1 
+        print(e)
+        return -1
     return 0
 
 def touch(d):
@@ -95,24 +94,24 @@ def touch(d):
 
 def chmod(path, mode=777, recursive=False):
     try:
-        if recursive: 
+        if recursive:
             os.system('sudo chmod {} -R {}'.format(mode, path))
         else:
             os.system('sudo chmod {} {}'.format(mode, path))
     except Exception as e:
-        DBG.error(e)
-        return -1 
+        print(e)
+        return -1
     return 0
 
-def chownUser(path, recursive=False, owner='user', group='user'):
+def chown(path, recursive=False, owner='user', group='user'):
     try:
         if recursive:
-            os.system('sudo chown  {} -R {}')
+            os.system('sudo chown  {}:{} -R {}'.format(owner,group, path))
         else:
-            os.system('sudo chown  {} {}')
+            os.system('sudo chown  {}:{} {}'.format(owner, group, path))
     except Exception as e:
-        DBG.error(e)
-        return -1 
+        print(e)
+        return -1
     return 0
 
 def file_ext(path, **kwargs):
@@ -130,7 +129,7 @@ def file_ext(path, **kwargs):
     return f
 
 def tar_unpacker(tar_path, **kwargs):
-    """ unpacks tar to a tmp directory. 
+    """ unpacks tar to a tmp directory.
 
 
     Kwargs:
@@ -154,7 +153,7 @@ def tar_unpacker(tar_path, **kwargs):
     extract_dir = kwargs.get("extract_dir", tmp_path)
 
     cmd = "tar -xf {}".format(tar_path)
-    if extract_dir != tmp_path: 
+    if extract_dir != tmp_path:
         cmd  = "tar -xf {} -C {}".format(tar_path, extract_dir)
     if verbose: 
         cmd = "tar -xvf {}".format(tar_path)
@@ -164,7 +163,7 @@ def tar_unpacker(tar_path, **kwargs):
     return tmp_path
 
 def tar_packer(tar_dir, **kwargs):
-    """ tars up  directory 
+    """ tars up  directory
 
 
     Kwargs:
@@ -181,7 +180,7 @@ def tar_packer(tar_dir, **kwargs):
 
         tar_packer(dir="/path/to/top_level_dir", [compression=gz|xz]
 
-        >>> 
+        >>>
             /tmp/FZ4245_Zb/top_level_dir.tar
     """
     compression = kwargs.get('compression','')
@@ -190,15 +189,15 @@ def tar_packer(tar_dir, **kwargs):
     file = tar_dir+'.tar'
     path = os.path.join(tmp_path, file)
     cmd ="tar -cf {}".format(path)
-    if verbose: 
+    if verbose:
         cmd ="tar -cvf {}".format(path)
-    if compression == 'xz': 
+    if compression == 'xz':
         cmd ="tar -cJf {}".format(path)
-        if verbose: 
+        if verbose:
             cmd ="tar -cJvf {}".format(path)
-    if compression == 'gz': 
+    if compression == 'gz':
         cmd ="tar -czf {}".format(path)
-        if verbose: 
+        if verbose:
             cmd ="tar -czvf {}".format(path)
 
     os.system(cmd)
@@ -208,16 +207,16 @@ def rm(d):
     try:
         rmsubtree(path=d)
     except Exception as e:
-        DBG.error(e)
-        return -1 
+        print(e)
+        return -1
     return 0
 
 def compress_path( path):
     try:
         tmp = tar_packer(tar_dir=path)
     except Exception as e:
-        DBG.error(e)
-        return '' 
+        print(e)
+        return ''
     return tmp
 
 def json_flatten(y):
@@ -227,7 +226,7 @@ def json_flatten(y):
     Kwargs:
 
         data (dict): data from nested dictionary
-        kv (dict): dictionary containing key,value pairs. 
+        kv (dict): dictionary containing key,value pairs.
 
     returns:
 
